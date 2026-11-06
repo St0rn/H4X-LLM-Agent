@@ -4,7 +4,9 @@ from agent import safe_automatic
 
 class AutoScanTest(unittest.TestCase):
     def test_known_domain(self):
-        self.assertTrue(safe_automatic("kali", "nmap_scan", {"target":"fabiendromas.pro", "scan_type":"-F", "additional_args":"-Pn", "ports":""}))
+        # A non-loopback domain must be explicitly allowlisted.
+        with patch.dict("os.environ", {"H4X_AUTO_TARGETS": "fabiendromas.pro"}):
+            self.assertTrue(safe_automatic("kali", "nmap_scan", {"target":"fabiendromas.pro", "scan_type":"-F", "additional_args":"-Pn", "ports":""}))
     def test_localhost(self):
         self.assertTrue(safe_automatic("kali", "nmap_scan", {"target":"127.0.0.1", "scan_type":"-sT", "ports":"1-1024"}))
     def test_unknown_domain(self):
