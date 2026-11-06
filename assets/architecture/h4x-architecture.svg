@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900" role="img" aria-labelledby="ttl desc">
+<title id="ttl">H4X LLM Agent — Architecture</title>
+<desc id="desc">H4X command line user connects to agent.py. Bootstrap hax.sh starts local services. Agent communicates bidirectionally with Ollama Qwen2.5, queries conversation memory and technical RAG, and invokes Kali MCP and MetasploitMCP through safeguarded tools. Results return to the operator.</desc>
+<defs>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071114"/><stop offset="1" stop-color="#0e2429"/></linearGradient>
+ <linearGradient id="core" x2="1" y2="1"><stop stop-color="#123b35"/><stop offset="1" stop-color="#10232b"/></linearGradient>
+ <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="none" stroke="#80e5b9" stroke-width="1.7"/></marker>
+ <marker id="arrowcyan" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="none" stroke="#65d6df" stroke-width="1.7"/></marker>
+ <style>
+  text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#e6f4f1}
+  .heading{font-size:34px;font-weight:800;letter-spacing:-.8px}
+  .sub{font-size:16px;fill:#b4d6d0}
+  .title{font-size:20px;font-weight:750}
+  .mid{font-size:15px;font-weight:650}
+  .sm{font-size:13px;fill:#c2d5d3}
+  .mini{font-size:12px;fill:#9dc8bd}
+  .label{font-size:12px;fill:#80e5b9;font-weight:800;letter-spacing:1.5px}
+  .panel{fill:#10252a;stroke:#4b9d97;stroke-width:1.5}
+  .tile{fill:#132e31;stroke:#2e716e;stroke-width:1.1}
+  .cyan{stroke:#62d6e0}
+  .green{stroke:#80e5b9}
+  .connection{fill:none;stroke:#80e5b9;stroke-width:2.3;marker-end:url(#arrow)}
+  .cyconnection{fill:none;stroke:#65d6df;stroke-width:2.3;marker-end:url(#arrowcyan)}
+  .dashed{stroke-dasharray:8 7}
+ </style>
+</defs>
+<rect width="1500" height="900" fill="url(#bg)"/>
+<g opacity=".075" stroke="#76b6aa"><path d="M0 60H1500M0 120H1500M0 180H1500M0 240H1500M0 300H1500M0 360H1500M0 420H1500M0 480H1500M0 540H1500M0 600H1500M0 660H1500M0 720H1500M0 780H1500M0 840H1500M60 0V900M120 0V900M180 0V900M240 0V900M300 0V900M360 0V900M420 0V900M480 0V900M540 0V900M600 0V900M660 0V900M720 0V900M780 0V900M840 0V900M900 0V900M960 0V900M1020 0V900M1080 0V900M1140 0V900M1200 0V900M1260 0V900M1320 0V900M1380 0V900M1440 0V900"/></g>
+<text x="750" y="56" text-anchor="middle" class="heading">H4X LLM Agent — Architecture</text>
+<text x="750" y="84" text-anchor="middle" class="sub">Local AI offensive-security agent using Ollama, MCP and Metasploit</text>
+<text x="36" y="160" class="label">USER</text>
+<text x="298" y="160" class="label">CONTROL</text>
+<text x="298" y="605" class="label">KNOWLEDGE</text>
+<text x="1020" y="160" class="label">EXECUTION</text>
+<text x="1020" y="702" class="label">RESULTS</text>
+<!-- Operator -->
+<rect x="32" y="177" width="235" height="395" rx="16" class="panel"/>
+<path d="M113 258h73M113 267h73" stroke="#80e5b9" opacity=".28"/>
+<rect x="101" y="219" width="97" height="73" rx="10" fill="#0d1d22" stroke="#80e5b9" stroke-width="2.4"/>
+<text x="149" y="266" text-anchor="middle" style="font:700 30px Consolas,monospace;fill:#80e5b9">&gt;_</text>
+<text x="149" y="334" text-anchor="middle" class="title">Operator /</text>
+<text x="149" y="362" text-anchor="middle" class="title">Red Teamer</text>
+<path d="M58 390H240" stroke="#2e716e"/>
+<text x="61" y="432" class="sm">• H4X CLI</text>
+<text x="61" y="470" class="sm">• Interactive commands</text>
+<text x="61" y="508" class="sm">• Command history</text>
+<!-- Bootstrap -->
+<rect x="300" y="115" width="420" height="118" rx="14" class="panel"/>
+<text x="322" y="147" class="title">hax.sh — bootstrap</text>
+<text x="322" y="180" class="sm">• Root checks   • Virtual environment</text>
+<text x="322" y="205" class="sm">• Ollama   • PostgreSQL   • MCP / RPC</text>
+<!-- Ollama -->
+<rect x="752" y="115" width="234" height="118" rx="14" class="panel cyan"/>
+<text x="773" y="147" class="title">Local LLM</text>
+<text x="773" y="183" class="sm">Ollama</text>
+<text x="773" y="209" class="sm">Qwen2.5</text>
+<!-- Agent core -->
+<rect x="300" y="270" width="686" height="295" rx="17" fill="url(#core)" stroke="#80e5b9" stroke-width="3"/>
+<text x="323" y="307" class="title">H4X Agent Core <tspan class="sm">(agent.py)</tspan></text>
+<rect x="322" y="324" width="314" height="65" rx="9" class="tile"/>
+<rect x="649" y="324" width="314" height="65" rx="9" class="tile"/>
+<rect x="322" y="400" width="314" height="65" rx="9" class="tile"/>
+<rect x="649" y="400" width="314" height="65" rx="9" class="tile"/>
+<rect x="322" y="476" width="314" height="65" rx="9" class="tile"/>
+<rect x="649" y="476" width="314" height="65" rx="9" class="tile"/>
+<text x="339" y="351" class="mid">Prompt session</text><text x="339" y="372" class="sm">Interactive terminal UI</text>
+<text x="665" y="351" class="mid">Intent analysis</text><text x="665" y="372" class="sm">LLM planning and tool selection</text>
+<text x="339" y="427" class="mid">MCP routing</text><text x="339" y="448" class="sm">Targeted tool catalogue</text>
+<text x="665" y="427" class="mid">Execution policy</text><text x="665" y="448" class="sm">Read-only auto / sensitive confirm</text>
+<text x="339" y="503" class="mid">Memory manager</text><text x="339" y="524" class="sm">Persistent conversation context</text>
+<text x="665" y="503" class="mid">Response handling</text><text x="665" y="524" class="sm">Output formatting / diagnostics</text>
+<!-- Knowledge -->
+<rect x="300" y="624" width="330" height="144" rx="14" class="panel"/>
+<rect x="650" y="624" width="336" height="144" rx="14" class="panel"/>
+<text x="320" y="659" class="title">Conversation Memory</text>
+<text x="320" y="690" class="sm">• Persistent context</text>
+<text x="320" y="718" class="sm">• Previous commands</text>
+<text x="320" y="745" class="sm">• Session state</text>
+<text x="669" y="659" class="title">Technical Tool RAG</text>
+<text x="669" y="690" class="sm">• Tool schemas / docs</text>
+<text x="669" y="718" class="sm">• Usage hints</text>
+<text x="669" y="745" class="sm">• Module knowledge</text>
+<!-- Execution -->
+<rect x="1020" y="177" width="215" height="120" rx="14" class="panel cyan"/>
+<text x="1037" y="212" class="title">Kali MCP Server</text>
+<text x="1037" y="238" class="sm">MCP bridge</text>
+<text x="1037" y="267" class="mini">Kali security tools</text>
+<rect x="1252" y="177" width="215" height="120" rx="14" class="panel cyan"/>
+<text x="1269" y="212" class="title">MetasploitMCP</text>
+<text x="1269" y="238" class="sm">MCP bridge</text>
+<text x="1269" y="267" class="mini">Metasploit backend</text>
+<rect x="1020" y="326" width="215" height="324" rx="14" class="panel"/>
+<text x="1037" y="360" class="mid">Kali tools</text>
+<text x="1037" y="396" class="sm">nmap</text>
+<text x="1037" y="431" class="sm">gobuster / dirb / nikto</text>
+<text x="1037" y="466" class="sm">sqlmap / wpscan</text>
+<text x="1037" y="501" class="sm">Impacket</text>
+<text x="1037" y="536" class="sm">BloodHound / LDAP</text>
+<text x="1037" y="571" class="sm">smbclient / psexec</text>
+<rect x="1252" y="326" width="215" height="324" rx="14" class="panel"/>
+<text x="1269" y="360" class="mid">Metasploit RPC</text>
+<text x="1269" y="386" class="mini">msfrpcd</text>
+<path d="M1269 406H1450" stroke="#2e716e"/>
+<text x="1269" y="444" class="sm">Payload generation</text>
+<text x="1269" y="482" class="sm">multi/handler</text>
+<text x="1269" y="520" class="sm">Jobs and sessions</text>
+<text x="1269" y="558" class="sm">Exploits</text>
+<!-- Results -->
+<rect x="1020" y="722" width="447" height="103" rx="14" class="panel"/>
+<text x="1038" y="758" class="title">Outputs &amp; Artifacts</text>
+<text x="1038" y="786" class="sm">Scan results · Diagnostics</text>
+<text x="1038" y="807" class="sm">Payload files · Logs</text>
+<!-- Connections -->
+<path d="M267 374H296" class="connection"/>
+<path d="M510 233V267" class="connection"/>
+<path d="M720 171H749" class="cyconnection"/>
+<path d="M870 233V267" class="cyconnection"/>
+<path d="M986 348H1005V230H1017" class="connection"/>
+<path d="M986 420H1000V294H1248V237" class="cyconnection"/>
+<path d="M1128 297V323" class="connection"/>
+<path d="M1360 297V323" class="connection"/>
+<path d="M474 624V568" class="connection dashed"/>
+<path d="M814 624V568" class="connection dashed"/>
+<path d="M1128 650V718" class="connection"/>
+<path d="M1360 650V718" class="connection"/>
+<path d="M1020 780H149V576" class="connection"/>
+<text x="750" y="867" text-anchor="middle" class="sub">St0rn — www.cybersecurit.fr</text>
+</svg>
