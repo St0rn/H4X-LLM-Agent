@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.2 — MCP discovery-first workflow (2026-11-06)
+
+- Allow only explicitly whitelisted read-only catalogue/job checks to run without confirmation.
+- Reduce LLM tool-choice overload with intent-scoped MCP schemas.
+- Show full catalogue results in the terminal, but pass relevance-ranked excerpts to the LLM.
+- Clearly mark partial MCP catalogues and avoid treating 100 entries as exhaustive.
+- Preserve explicit x64 checks, operator approval for state-changing operations, and no automatic retries after errors.
+- Add regression tests covering catalogue selection, result limits and approval policy.
+- **Upstream note:** the Metasploit RPC `KeyError: b'payload'` remains unresolved.
+
+
 ## 0.1.1 — MCP error handling (2026-11-06)
 
 - Recognize application-level MCP errors reported as `status: error`.
