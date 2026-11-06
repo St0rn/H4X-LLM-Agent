@@ -1,308 +1,319 @@
 <div align="center">
 
-# H4X // LLM AGENT
+<pre>
+ _   _ _  _  __  __
+| | | | || | \ \/ /
+| |_| | || |_ >  <
+|  _  |__   _/ /\ \
+|_| |_|  |_| /_/  \_\
 
-**LOCAL AI · KALI LINUX · MCP · METASPLOIT · TECHNICAL RAG**
+ _     _     __  __
+| |   | |   |  \/  |
+| |   | |   | |\/| |
+| |___| |___| |  | |
+|_____|_____|_|  |_|
 
-[![MIT License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
-![Kali Linux](https://img.shields.io/badge/Platform-Kali%20Linux-557C94?style=for-the-badge&logo=kalilinux&logoColor=white)
-![Python](https://img.shields.io/badge/Language-Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Ollama](https://img.shields.io/badge/AI-Ollama-171717?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Experimental-E8A317?style=for-the-badge)
+       A G E N T
+</pre>
 
-**An AI-assisted security operations terminal powered by local language models.**  
-**Un terminal de cybersécurité assisté par IA, propulsé par des modèles locaux.**
+### <code>H4X // OFFENSIVE AI ENGINE</code>
 
-**Author / Auteur:** [St0rn](https://github.com/St0rn) · [Cybersecur'IT](https://www.cybersecurit.fr)
+**Your local AI-powered interface to Kali Linux, MCP and Metasploit.**  
+**Ton interface IA locale pour Kali Linux, MCP et Metasploit.**
 
-[🇬🇧 English](#english) · [🇫🇷 Français](#français) · [MIT License](LICENSE)
+[![MIT](https://img.shields.io/badge/License-MIT-31D35C?style=for-the-badge)](LICENSE)
+![Kali Linux](https://img.shields.io/badge/Kali-Linux-557C94?style=for-the-badge&logo=kalilinux&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Ollama](https://img.shields.io/badge/LLM-Ollama-111111?style=for-the-badge)
+![MCP](https://img.shields.io/badge/Protocol-MCP-24BCC8?style=for-the-badge)
+![Release](https://img.shields.io/badge/Stage-Experimental-F0AB37?style=for-the-badge)
+
+**[English](#english) · [Français](#français) · [Quick start](#quick-start) · [Security](SECURITY.md) · [MIT License](LICENSE)**
+
+<sub>Developed by <a href="https://github.com/St0rn">St0rn</a> · <a href="https://www.cybersecurit.fr">Cybersecur'IT</a></sub>
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> **EN:** For authorized security assessments and controlled laboratories only. H4X is an experimental, operator-assisted project; review generated commands and verify actual execution results.  
-> **FR :** Réservé aux audits explicitement autorisés et aux laboratoires contrôlés. H4X est un projet expérimental piloté par un opérateur ; vérifie les commandes proposées et les résultats réels.
+> **EN:** Designed for authorized security assessments and isolated labs. Tool calls and interpretations require operator verification.  
+> **FR :** Projet destiné aux audits autorisés et aux laboratoires isolés. Les commandes et leurs interprétations doivent être vérifiées par l'opérateur.
 
-## System architecture / Architecture du système
+## H4X in action · H4X en action
 
-```text
-                        +------------------------+
-                        | Operator / Opérateur   |
-                        +-----------+------------+
-                                    |
-                                    v
-                        +------------------------+
-                        |        H4X CLI         |
-                        +-----------+------------+
-                                    |
-                  +-----------------+------------------+
-                  |                 |                  |
-                  v                 v                  v
-          +---------------+ +---------------+ +----------------+
-          | Ollama / LLM  | | Technical RAG | | Local memory   |
-          +-------+-------+ +---------------+ +----------------+
-                  |
-                  v
-          +-----------------------+
-          | Intent & tool routing |
-          +-----------+-----------+
-                      |
-                      v
-          +-----------------------+
-          | Authorization policy  |
-          | + operator approval   |
-          +-----------+-----------+
-                      |
-              +-------+-------+
-              |               |
-              v               v
-       +-------------+ +----------------+
-       |  Kali MCP   | | MetasploitMCP  |
-       +------+------+ +-------+--------+
-              |                |
-              +--------+-------+
-                       |
-                       v
-             +------------------+
-             | Tool result / CLI|
-             +------------------+
-```
+<div align="center">
+
+<img src="assets/screenshots/h4x-banner.png" alt="Authentic H4X ASCII terminal banner" width="360">
+
+*Real H4X terminal banner · Bannière réelle du terminal H4X*
+
+<img src="assets/screenshots/h4x-startup.png" alt="Real H4X startup showing Ollama, PostgreSQL, Metasploit RPC, Kali MCP and 24 discovered MCP tools" width="100%">
+
+*Real startup on Kali Linux · Démarrage réel sur Kali Linux*
+
+</div>
+
+---
+
+## At a glance · En un coup d'œil
+
+| <div align="center">LOCAL AI</div> | <div align="center">MCP BRIDGE</div> | <div align="center">TECHNICAL RAG</div> |
+|:---:|:---:|:---:|
+| **Ollama + Qwen** | **Kali MCP + MetasploitMCP** | **Tool schemas + local documentation** |
+| Private inference | 24 MCP tools in the pictured setup | Searchable technical knowledge |
+
+| <div align="center">ACTIVE DIRECTORY</div> | <div align="center">OPERATOR CONTROL</div> | <div align="center">TERMINAL UX</div> |
+|:---:|:---:|:---:|
+| **AD · DNS · LDAP · SMB** | **Scoped targets + confirmations** | **Rich · History · Markdown** |
+| Bounded discovery | Authorized workflow | Interactive CLI |
 
 ---
 
 <a id="english"></a>
-# 🇬🇧 English
+## English
 
-## Overview
+### What is H4X?
 
-**H4X LLM Agent** integrates a local Ollama model with **Kali MCP Server** and **MetasploitMCP**, providing an interactive security-testing workflow in the terminal. It combines MCP tool discovery, task-aware routing, technical documentation retrieval and persistent operator notes.
+**H4X LLM Agent** is an experimental, terminal-first security assistant that combines a locally hosted language model with the tool interfaces of Kali Linux and Metasploit. It discovers the actual MCP capabilities available in your environment, searches technical references when needed, and presents tool results in a structured terminal workflow.
 
-H4X is designed to assist an experienced operator, **not** to autonomously certify a system as secure.
+It is **operator-assisted** software—not a substitute for a validated penetration-testing methodology.
 
-### Highlights
+<details open>
+<summary><strong>Core capabilities</strong></summary>
 
-| Component | Capability |
+| Capability | Implementation |
 |:--|:--|
-| **Local inference** | Ollama-based language model orchestration |
-| **Kali MCP** | Discover and invoke tools exposed by Kali MCP Server |
-| **MetasploitMCP** | Interact with a configured Metasploit RPC instance |
-| **Technical RAG** | Search MCP schemas, local command help and project documentation |
-| **Tool-aware routing** | Translate explicit requests into tool arguments, including Nmap scan modes |
-| **Interactive experience** | Rich terminal output, editable history and command previews |
-| **Active Directory** | Bounded AD, DNS, SMB and LDAP discovery helpers |
-| **Local memory** | Save and retrieve operator notes across sessions |
-| **Operator controls** | Explicit target allowlists and confirmation for sensitive operations |
+| Local intelligence | Ollama and a locally configured model (example: Qwen 2.5 7B) |
+| Tool orchestration | Dynamic discovery of Kali MCP and MetasploitMCP tool schemas |
+| Tool-aware Nmap requests | Recognizes explicit scan modes such as quick scans and aggressive scans |
+| Technical knowledge | Lexical RAG over real MCP schemas, local help and text documents |
+| Active Directory | Bounded reconnaissance helpers and LDAP discovery |
+| Persistent operator context | Local notes and conversation state |
+| Developer-friendly interface | Readable tool output, command preview, editable history |
+| Execution policy | Confirm sensitive operations; scope permitted automation to explicit targets |
 
-### Requirements
+</details>
 
-- Kali Linux, preferably running in an isolated VM
-- Python 3 and `venv`
-- Ollama and a locally downloaded compatible model
-- Kali MCP Server and MetasploitMCP
-- Metasploit Framework, RPC and PostgreSQL when using the Metasploit integration
+### How the pieces fit together
 
-> [!NOTE]
-> MCP server package names and startup commands vary between Kali releases. Verify the installed versions and actual server entry points. The current launcher uses elevated privileges and should only run in a dedicated environment.
+```text
+                       H4X // LLM AGENT
+                               |
+          +--------------------+--------------------+
+          |                    |                    |
+          v                    v                    v
+    OLLAMA / LLM       TECHNICAL RAG         LOCAL MEMORY
+          |
+          v
+   INTENT + TOOL ROUTER
+          |
+          v
+   OPERATOR AUTHORIZATION
+          |
+      +---+-------------------+
+      |                       |
+      v                       v
+   KALI MCP              METASPLOIT MCP
+      |                       |
+      +-----------+-----------+
+                  |
+                  v
+          REAL TOOL OUTPUT
+                  |
+                  v
+          H4X INTERACTIVE CLI
+```
 
+<a id="quick-start"></a>
 ### Quick start
+
+**01 — Prepare the environment.** Use a dedicated Kali VM with Python 3, Ollama, Kali MCP Server, MetasploitMCP and Metasploit Framework installed and configured. Confirm the server executable names for your Kali release.
+
+**02 — Clone and install.**
 
 ```bash
 git clone https://github.com/St0rn/H4X-LLM-Agent.git
 cd H4X-LLM-Agent
-
 python3 -m venv .venv
 .venv/bin/python3 -m pip install -r requirements.txt
-
-# Install Ollama and configure the two MCP servers beforehand.
 ollama pull qwen2.5:7b
+```
 
+**03 — Review the launcher and start.**
+
+```bash
 chmod +x hax.sh
 sudo bash ./hax.sh
 ```
 
-The launcher checks or starts dependent local services and starts the agent. **Review `hax.sh` before running it as root.** Never add RPC credentials to tracked files.
+> [!WARNING]
+> The launcher currently uses elevated privileges and starts/checks local services. Inspect the script before execution. Keep RPC credentials and secrets out of Git. The README does not imply that all integrations work unchanged across Kali releases.
 
-### Technical RAG
+<details>
+<summary><strong>Command reference / Commandes disponibles</strong></summary>
 
-The knowledge layer uses a **lexical index** over available MCP tool names, descriptions and JSON argument schemas. It can also index the `--help` output of installed tools and text-based project documentation. It is not a semantic vector database and does not guarantee support for every possible Kali utility.
-
-### Command reference
-
-| Command | Description |
+| Command | Purpose |
 |:--|:--|
-| `/help` · `/tools` | Help and discovered MCP tools |
-| `/inventory` | Installed-tool inventory |
+| `/help` · `/tools` | Help and exposed MCP tools |
+| `/inventory` | Available binaries and integrations |
 | `/ad <target> [domain]` | Bounded Active Directory discovery |
-| `/ldap <target> [baseDN]` | LDAP discovery and base-scope query |
-| `/rag tools` | View indexed MCP tool catalog |
-| `/rag build` | Build local technical index |
-| `/rag search <query>` | Search technical knowledge |
+| `/ldap <target> [baseDN]` | LDAP RootDSE and scoped queries |
+| `/rag tools` | MCP knowledge inventory |
+| `/rag build` | Generate / refresh local technical knowledge |
+| `/rag search <query>` | Search indexed references |
 | `/rag reload` | Reload documentation |
-| `/toolhelp <binary>` | Retrieve local executable help |
-| `/remember <note>` · `/memories` | Save / read notes |
-| `/clear` · `/reset` · `/quit` | Clear screen / reset context / exit |
+| `/toolhelp <binary>` | Index installed tool help |
+| `/remember <note>` · `/memories` | Persistent notes |
+| `/clear` · `/reset` · `/quit` | Clear display, context or exit |
 
-**Illustrative requests (not execution evidence):**
+</details>
+
+<details>
+<summary><strong>Technical RAG: scope and limitations</strong></summary>
+
+The RAG knowledge store is **lexical**, built from MCP tool names, descriptions and input schemas, supplemented by local `--help` output and project documents. It does **not** automatically possess the full manuals for every Kali tool and is **not** an embedding-based semantic vector database.
 
 ```text
-H4X > /tools
+H4X > /rag tools
 H4X > /rag build
-H4X > /rag search kerberos
-H4X > scan localhost quickly with Nmap
-H4X > analyze the returned results
+H4X > /rag search nmap
+H4X > /toolhelp nmap
 ```
 
-### Scoped automatic scanning
+</details>
 
-Explicitly approved Nmap targets can be configured through `H4X_AUTO_TARGETS` **inside `hax.sh`**, before it launches Python:
+<details>
+<summary><strong>Safe target configuration</strong></summary>
+
+To allow selected low-friction Nmap interactions on **explicitly authorized targets**, edit `H4X_AUTO_TARGETS` in `hax.sh` before starting the agent:
 
 ```bash
 export H4X_AUTO_TARGETS="localhost,127.0.0.1,::1,lab.example"
 ```
 
-Names are matched exactly: `lab.example` is not the same entry as `www.lab.example`. Public deployments should default to loopback-only. This setting does not replace the requirement to obtain authorization.
+Hostnames match exactly. Adding `lab.example` does not implicitly authorize `www.lab.example` or its subdomains. Sensitive operations continue to require human approval.
 
-### Known limitations
-
-- Tool support depends on the connected MCP server schemas and installed executables.
-- Model-generated commands and interpretations may be incorrect.
-- Technical RAG currently uses lexical retrieval, not vector embeddings.
-- A reconstructed command preview does not prove a command ran; inspect the actual tool result.
-- The repository does not claim live, end-to-end verification against the reader's setup.
+</details>
 
 ---
 
 <a id="français"></a>
-# 🇫🇷 Français
+## Français
 
-## Présentation
+### Pourquoi H4X ?
 
-**H4X LLM Agent** connecte un modèle Ollama local à **Kali MCP Server** et **MetasploitMCP** pour proposer une interface conversationnelle de tests de sécurité dans le terminal. Il associe découverte des outils MCP, routage adapté à la demande, recherche documentaire technique et mémoire persistante.
+**H4X LLM Agent** est un outil expérimental de cybersécurité en terminal. Il associe un LLM exécuté localement via Ollama aux serveurs **Kali MCP** et **MetasploitMCP** pour assister un opérateur dans la sélection des outils, l'exécution des commandes autorisées et l'exploitation de leurs résultats.
 
-H4X assiste un opérateur expérimenté : **il ne remplace ni son jugement ni une validation technique des résultats**.
+L'objectif est de conserver un workflow **local, contrôlable, traçable et extensible**.
 
-### Fonctionnalités principales
+<details open>
+<summary><strong>Fonctionnalités principales</strong></summary>
 
 | Module | Fonction |
 |:--|:--|
-| **IA locale** | Orchestration d'un modèle via Ollama |
-| **Kali MCP** | Découverte et appel des outils exposés par le serveur MCP |
-| **MetasploitMCP** | Intégration d'une instance Metasploit RPC configurée |
-| **RAG technique** | Recherche dans les schémas MCP, aides locales et documentation |
-| **Routage des outils** | Conversion des intentions explicites en paramètres, notamment Nmap |
-| **Terminal interactif** | Affichage Rich, historique modifiable et aperçu des commandes |
-| **Active Directory** | Reconnaissance AD, DNS, SMB et LDAP bornée |
-| **Mémoire locale** | Conservation des notes de l'opérateur entre les sessions |
-| **Contrôles** | Cibles autorisées explicites et confirmation des actions sensibles |
+| Intelligence locale | Ollama et modèle configurable, dont Qwen 2.5 7B |
+| Outils Kali | Découverte dynamique des outils réellement exposés par Kali MCP |
+| Metasploit | Connexion au serveur RPC via MetasploitMCP |
+| Routage Nmap | Correspondance des demandes explicites et des options de scan |
+| RAG technique | Index lexical des schémas MCP, aides locales et documents |
+| Active Directory | Reconnaissance AD, DNS, LDAP et SMB bornée |
+| Mémoire | Notes locales persistantes |
+| Interface | Terminal Rich, historique éditable, aperçu de commandes |
+| Contrôle d'exécution | Périmètre explicite et confirmation des appels sensibles |
 
-### Prérequis
+</details>
 
-- Kali Linux, de préférence dans une VM isolée
-- Python 3 et `venv`
-- Ollama avec un modèle compatible téléchargé localement
-- Kali MCP Server et MetasploitMCP
-- Metasploit Framework, RPC et PostgreSQL pour l'intégration Metasploit
+### Installation
 
-> [!NOTE]
-> Les noms des paquets et les commandes de démarrage MCP peuvent varier selon la version de Kali. Vérifie les exécutables effectivement présents. Le lanceur actuel utilise des privilèges élevés et doit rester réservé à un environnement dédié.
+**01 — Préparer Kali.** Utilise une VM dédiée et installe Python 3, Ollama, Kali MCP Server, MetasploitMCP et Metasploit Framework. Vérifie leurs points d'entrée selon la version de Kali.
 
-### Installation rapide
+**02 — Installer les dépendances.**
 
 ```bash
 git clone https://github.com/St0rn/H4X-LLM-Agent.git
 cd H4X-LLM-Agent
-
 python3 -m venv .venv
 .venv/bin/python3 -m pip install -r requirements.txt
-
-# Installer Ollama et configurer les deux serveurs MCP au préalable.
 ollama pull qwen2.5:7b
+```
 
+**03 — Démarrer.**
+
+```bash
 chmod +x hax.sh
 sudo bash ./hax.sh
 ```
 
-**Examine `hax.sh` avant de l'exécuter en root.** Conserve les mots de passe RPC et autres secrets hors de Git.
+> [!CAUTION]
+> Le lanceur nécessite actuellement des privilèges élevés et gère plusieurs services locaux. Vérifie `hax.sh` avant exécution. Ne publie jamais les mots de passe RPC, journaux et données de session.
 
-### RAG technique
+<details>
+<summary><strong>Configuration des cibles Nmap autorisées</strong></summary>
 
-Le RAG repose sur un **index lexical** construit à partir des noms, descriptions et schémas JSON des outils MCP. Il peut également indexer les sorties `--help` des utilitaires installés ainsi que les documents textuels du projet. Il ne s'agit pas d'une base vectorielle et cela ne garantit pas la prise en charge de tous les utilitaires Kali.
-
-### Commandes disponibles
-
-| Commande | Description |
-|:--|:--|
-| `/help` · `/tools` | Aide et outils MCP découverts |
-| `/inventory` | Inventaire des utilitaires installés |
-| `/ad <cible> [domaine]` | Découverte Active Directory bornée |
-| `/ldap <cible> [baseDN]` | Découverte LDAP et requête ciblée |
-| `/rag tools` | Catalogue technique des outils MCP |
-| `/rag build` | Construction de l'index local |
-| `/rag search <requête>` | Recherche dans la documentation |
-| `/rag reload` | Rechargement de la documentation |
-| `/toolhelp <binaire>` | Aide locale d'un exécutable |
-| `/remember <note>` · `/memories` | Enregistrement et consultation des notes |
-| `/clear` · `/reset` · `/quit` | Effacement de l'écran / contexte / sortie |
-
-**Exemples de saisie (sans prétendre à une exécution réelle) :**
-
-```text
-H4X > /tools
-H4X > /rag build
-H4X > /rag search kerberos
-H4X > fais un scan Nmap rapide sur localhost
-H4X > analyse les résultats obtenus
-```
-
-### Cibles Nmap autorisées
-
-Pour les scans Nmap automatiques, renseigne les cibles **exactement autorisées** dans `hax.sh`, avant le lancement du Python :
+Modifie `H4X_AUTO_TARGETS` dans `hax.sh` pour déclarer les seules cibles sur lesquelles l'exécution automatique est autorisée :
 
 ```bash
 export H4X_AUTO_TARGETS="localhost,127.0.0.1,::1,lab.example"
 ```
 
-`lab.example` et `www.lab.example` sont deux entrées différentes. La configuration publique devrait autoriser uniquement le loopback par défaut. L'autorisation contractuelle demeure indispensable.
+Chaque nom est comparé exactement. Les opérations sensibles restent soumises à confirmation. L'autorisation contractuelle ou explicite du propriétaire reste obligatoire.
 
-### Limites connues
+</details>
 
-- Les capacités réelles dépendent des schémas MCP et des outils installés.
-- Le modèle peut se tromper dans une commande ou son interprétation.
-- Le RAG utilise une recherche lexicale, sans embeddings vectoriels.
-- Un aperçu de commande n'est pas une preuve d'exécution : vérifie la réponse réelle de l'outil.
-- Aucune validation d'intégration complète sur toutes les installations Kali n'est revendiquée.
+<details>
+<summary><strong>Utilisation du RAG et mémoire</strong></summary>
+
+```text
+H4X > /rag build
+H4X > /rag search kerberos
+H4X > /toolhelp nmap
+H4X > /remember Mon laboratoire utilise un réseau isolé
+H4X > /memories
+```
+
+Le RAG interroge la documentation technique disponible localement. Il ne remplace pas la documentation officielle ni la vérification des sorties réelles.
+
+</details>
+
+<details>
+<summary><strong>Limites connues</strong></summary>
+
+- Les outils MCP disponibles dépendent de l'installation Kali et des versions des serveurs.
+- Un modèle peut mal interpréter une demande ou proposer des arguments invalides.
+- La recherche documentaire est lexicale, non vectorielle.
+- Un aperçu de commande n'est pas une preuve d'exécution.
+- L'illustration d'initialisation est une vraie capture d'une installation, pas une garantie de fonctionnement sur chaque machine.
+
+</details>
 
 ---
 
-## Project structure / Structure du projet
+## Repository / Dépôt
 
 ```text
 H4X-LLM-Agent/
-├── agent.py           # Orchestration, MCP, terminal
-├── hax.sh             # Startup launcher / Lanceur
-├── ad_tools.py        # AD / LDAP helpers
-├── technical_rag.py   # Local technical retrieval
-├── requirements.txt   # Python dependencies / Dépendances
-├── docs/              # Documentation
-├── tests/             # Developer tests / Tests développeur
-├── LICENSE            # MIT
-└── README.md          # English + Français
+|-- agent.py                 # Interactive agent / Agent interactif
+|-- hax.sh                   # Launcher / Lanceur
+|-- ad_tools.py              # AD and LDAP helpers
+|-- technical_rag.py         # Technical knowledge retrieval
+|-- requirements.txt         # Dependencies / Dépendances
+|-- docs/                    # Documentation
+|-- tests/                   # Tests
+|-- assets/screenshots/      # Real terminal screenshots / Captures réelles
+|-- LICENSE                  # MIT License
+`-- README.md                # EN / FR
 ```
-
-## Security & contributions / Sécurité et contributions
-
-- [Security policy / Politique de sécurité](SECURITY.md)
-- [Contribution guide / Guide de contribution](CONTRIBUTING.md)
-- [Changelog / Historique](CHANGELOG.md)
-- [MIT License / Licence MIT](LICENSE)
 
 <div align="center">
 
-**Built by St0rn — [Cybersecur'IT](https://www.cybersecurit.fr)**
+### Open source · MIT licensed
 
-*For research, education and authorized security operations.*  
-*Pour la recherche, la formation et les audits de sécurité autorisés.*
+[Security / Sécurité](SECURITY.md) · [Contributing / Contribuer](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) · [License / Licence](LICENSE)
+
+<sub>© 2026 St0rn — <a href="https://www.cybersecurit.fr">www.cybersecurit.fr</a></sub>
+
+**Think like an adversary. Operate with discipline.**  
+*Penser comme l'adversaire. Agir avec méthode.*
 
 </div>
