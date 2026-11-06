@@ -144,36 +144,6 @@ It is **operator-assisted** software—not a substitute for a validated penetrat
 
 </details>
 
-### How the pieces fit together
-
-```text
-                       H4X // LLM AGENT
-                               |
-          +--------------------+--------------------+
-          |                    |                    |
-          v                    v                    v
-    OLLAMA / LLM       TECHNICAL RAG         LOCAL MEMORY
-          |
-          v
-   INTENT + TOOL ROUTER
-          |
-          v
-   OPERATOR AUTHORIZATION
-          |
-      +---+-------------------+
-      |                       |
-      v                       v
-   KALI MCP              METASPLOIT MCP
-      |                       |
-      +-----------+-----------+
-                  |
-                  v
-          REAL TOOL OUTPUT
-                  |
-                  v
-          H4X INTERACTIVE CLI
-```
-
 <a id="quick-start"></a>
 ### Quick start
 
