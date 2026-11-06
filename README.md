@@ -39,6 +39,23 @@
 
 ---
 
+## Architecture · Architecture de l'agent
+
+<div align="center">
+
+![H4X LLM Agent — architecture: operator, bootstrap, Ollama, agent core, memory, RAG, Kali MCP, Metasploit RPC and results](assets/architecture/h4x-architecture.svg)
+
+*EN: H4X control plane, local LLM, MCP execution bridges and feedback loop.*  
+*FR : cœur H4X, LLM local, passerelles d'exécution MCP et retour des résultats vers l'opérateur.*
+
+</div>
+
+The operator interacts with `agent.py` through the H4X CLI. `hax.sh` prepares the runtime; Ollama/Qwen handles local model inference; tool routing connects Kali MCP and MetasploitMCP while operator approval protects sensitive execution. Conversation memory and technical RAG support the agent.
+
+L'opérateur pilote `agent.py` depuis le terminal H4X. `hax.sh` prépare les services ; Ollama/Qwen assure l'inférence locale ; le routage d'outils relie Kali MCP et MetasploitMCP, avec validation humaine pour les actions sensibles. La mémoire conversationnelle et le RAG technique complètent l'agent.
+
+---
+
 ## RPC handler compatibility / Compatibilité RPC du handler
 
 | English | Français |
