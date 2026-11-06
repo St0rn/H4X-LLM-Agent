@@ -27,22 +27,47 @@
 
 ## System architecture / Architecture du système
 
-```mermaid
-flowchart TB
-    User["Operator / Opérateur"] --> CLI["H4X CLI"]
-    CLI <--> LLM["Ollama / Local LLM"]
-    CLI <--> RAG["Technical RAG / Documentation"]
-    CLI <--> Memory["Persistent memory / Mémoire"]
-    LLM --> Router["Intent & MCP tool router"]
-    Router --> Policy{"Authorization / Autorisation"}
-    Policy -->|"Allowed / Autorisé"| Kali["Kali MCP"]
-    Policy -->|"Allowed / Autorisé"| MSF["MetasploitMCP"]
-    Policy -->|"Sensitive / Sensible"| Review["Operator confirmation"]
-    Review --> Kali
-    Review --> MSF
-    Kali --> Output["Tool result / Résultat réel"]
-    MSF --> Output
-    Output --> CLI
+```text
+                        +------------------------+
+                        | Operator / Opérateur   |
+                        +-----------+------------+
+                                    |
+                                    v
+                        +------------------------+
+                        |        H4X CLI         |
+                        +-----------+------------+
+                                    |
+                  +-----------------+------------------+
+                  |                 |                  |
+                  v                 v                  v
+          +---------------+ +---------------+ +----------------+
+          | Ollama / LLM  | | Technical RAG | | Local memory   |
+          +-------+-------+ +---------------+ +----------------+
+                  |
+                  v
+          +-----------------------+
+          | Intent & tool routing |
+          +-----------+-----------+
+                      |
+                      v
+          +-----------------------+
+          | Authorization policy  |
+          | + operator approval   |
+          +-----------+-----------+
+                      |
+              +-------+-------+
+              |               |
+              v               v
+       +-------------+ +----------------+
+       |  Kali MCP   | | MetasploitMCP  |
+       +------+------+ +-------+--------+
+              |                |
+              +--------+-------+
+                       |
+                       v
+             +------------------+
+             | Tool result / CLI|
+             +------------------+
 ```
 
 ---
