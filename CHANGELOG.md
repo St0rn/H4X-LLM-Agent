@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.3 — Handler RPC compatibility (2026-11-07)
+
+- Enforce explicit x64/x86 module architecture for `start_listener`, `generate_payload` and `run_exploit`.
+- Add an optional, reversible Kali MetasploitMCP compatibility patch for `exploit/multi/handler`.
+- Avoid merging non-scalar `PayloadModule` defaults into the handler RPC call.
+- Keep sensitive-operation confirmation and no automatic retries after failures.
+- Add regression tests. Runtime compatibility still requires validation on Kali.
+
+
 ## 0.1.2 — MCP discovery-first workflow (2026-11-06)
 
 - Allow only explicitly whitelisted read-only catalogue/job checks to run without confirmation.
