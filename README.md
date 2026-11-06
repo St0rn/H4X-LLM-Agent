@@ -1,20 +1,7 @@
 <div align="center">
 
-<pre>
- _   _ _  _  __  __
-| | | | || | \ \/ /
-| |_| | || |_ >  <
-|  _  |__   _/ /\ \
-|_| |_|  |_| /_/  \_\
+<img src="assets/screenshots/h4x-banner.png" alt="H4X LLM Agent — original terminal banner" width="420">
 
- _     _     __  __
-| |   | |   |  \/  |
-| |   | |   | |\/| |
-| |___| |___| |  | |
-|_____|_____|_|  |_|
-
-       A G E N T
-</pre>
 
 ### <code>H4X // OFFENSIVE AI ENGINE</code>
 
@@ -43,10 +30,6 @@
 ## H4X in action · H4X en action
 
 <div align="center">
-
-<img src="assets/screenshots/h4x-banner.png" alt="Authentic H4X LLM Agent terminal ASCII banner" width="360">
-
-*Authentic H4X banner · Bannière originale H4X*
 
 <img src="assets/screenshots/h4x-startup.png" alt="Authentic Kali Linux startup showing Ollama, PostgreSQL, Kali MCP, MetasploitMCP and 24 connected MCP tools" width="100%">
 
