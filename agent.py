@@ -77,22 +77,71 @@ def render_answer(answer: str, mode: str = "auto") -> None:
         print(answer)
 
 
+READ_ONLY_MCP_TOOLS = frozenset({
+    ("kali", "server_health"),
+    ("metasploit", "list_payloads"),
+    ("metasploit", "list_jobs"),
+})
+
+
+def is_read_only_tool(server: str, tool: str) -> bool:
+    """Small explicit allowlist: tool names outside it still need approval."""
+    return (server, tool) in READ_ONLY_MCP_TOOLS
+
+
 def choose_tools(prompt: str, registered: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Reduce Qwen tool-choice overload; do not infer execution from text."""
+    """Give the small model an intent-scoped tool catalogue, not all MCP tools."""
     q = prompt.casefold()
+
     def named(*parts: str) -> list[dict[str, Any]]:
-        chosen = [t for t in registered if any(part in t["function"]["name"].casefold() for part in parts)]
-        return chosen or registered
+        selection = [t for t in registered
+                     if any(part in t["function"]["name"].casefold() for part in parts)]
+        return selection or registered[:16]
+
     if re.search(r"\bnmap\b|scan (tcp|udp|ports?)|ports? (tcp|udp)", q):
         return named("kali__nmap_scan")
     if re.search(r"\b(gobuster|dirb|nikto|sqlmap|wpscan)\b", q):
-        return named("kali__gobuster_scan", "kali__dirb_scan", "kali__nikto_scan", "kali__sqlmap_scan", "kali__wpscan_analyze")
-    if re.search(r"\b(metasploit|meterpreter|msfconsole|msfvenom|payload|exploit|listener)\b", q):
-        return [t for t in registered if t["function"]["name"].startswith("metasploit__")] or registered
+        return named("kali__gobuster_scan", "kali__dirb_scan",
+                     "kali__nikto_scan", "kali__sqlmap_scan", "kali__wpscan_analyze")
+    if re.search(r"\b(metasploit|meterpreter|msfconsole|msfvenom|payload|exploit|listener|jobs?)\b", q):
+        if re.search(r"\b(jobs?|tâches? de fond)\b", q) and not re.search(r"\b(payload|generate|génér|handler)\b", q):
+            return named("metasploit__list_jobs")
+        # For module discovery, expose the catalogue read first. Execution tools
+        # remain available, but operator approval still protects state changes.
+        if re.search(r"\b(?:liste|list|catalogue|disponib\w*|available|compatib\w*|vérifi\w*)\b", q):
+            return named("metasploit__list_payloads", "metasploit__generate_payload")
+        return [t for t in registered if t["function"]["name"].startswith("metasploit__")][:12] or registered[:16]
     if re.search(r"\b(santé serveur|health|état du serveur)\b", q):
         return named("kali__server_health")
-    # Default to a small catalogue with specialized tools first.
-    return registered[:16] if len(registered) > 16 else registered
+    return registered[:16]
+
+
+def compact_catalog_for_llm(payload: Any, prompt: str, limit: int = 35) -> str:
+    """Present relevant discovered names with an explicit completeness warning.
+
+    Keeps terminal output intact. Only the limited conversational context is
+    condensed; no claim is made that a truncated catalogue is exhaustive.
+    """
+    value = unwrap(payload)
+    if not isinstance(value, list) or not all(isinstance(x, str) for x in value):
+        return output_text(value)[:20000]
+    terms = [x for x in re.findall(r"[a-z0-9]{3,}", prompt.casefold())
+             if x not in {"dans", "pour", "avec", "sans", "this", "from",
+                          "the", "une", "des", "and", "windows", "format",
+                          "payload", "metasploit", "mcp", "h4x"}]
+    def score(item: str) -> int:
+        lowered = item.casefold()
+        return sum(3 for term in terms if term in lowered)
+    ranking = sorted(enumerate(value), key=lambda pair: (-score(pair[1]), pair[0]))
+    results = [name for _, name in ranking[:limit]]
+    warning = ("Cette réponse est un extrait du catalogue MCP ; elle peut être "
+               "limitée par le serveur (par exemple aux 100 premiers résultats). "
+               "L'absence d'une entrée NE PROUVE PAS qu'elle est indisponible. "
+               "Ne devine pas un nom de module et ne suppose pas une compatibilité.")
+    return json.dumps({"returned_entries": len(value),
+                       "shown_to_model": len(results),
+                       "partial_catalog_warning": warning,
+                       "matching_entries": results}, ensure_ascii=False)
 
 
 def explicit_nmap_arguments(prompt: str) -> dict[str, str] | None:
@@ -180,6 +229,15 @@ et les schémas MCP réels. Si l'aide est absente, explique la limite.
 Réponds en français et explique la différence entre un résultat réel et une intention.
 Ne reconstitue pas des commandes imaginaires si aucun appel MCP n'a eu lieu.
 Si une demande concerne ces techniques, décris les prérequis sans inventer de résultat.
+Pour une demande de vérification de module, consulte d'abord le catalogue
+MCP en lecture seule. Les listes renvoyées peuvent être tronquées : l'absence
+d'un nom dans les 100 premières entrées ne prouve pas son indisponibilité.
+Ne réutilise pas un choix incompatible après avoir consulté le catalogue.
+Ne transforme pas une consultation documentaire en exécution sans validation.
+Après un résultat en erreur, explique la cause et n'appelle pas un outil avec
+les mêmes arguments dans le même tour. Les lectures seules explicitement
+répertoriées peuvent s'exécuter sans confirmation ; toute autre opération
+conserve ses confirmations. Ne fabrique aucune preuve de compatibilité.
 Réponds toujours avec du texte, même lorsqu'aucun outil n'est pertinent.
 Ne présente jamais un objet JSON contenant name/arguments comme une exécution réelle :
 seuls les appels MCP envoyés via tool_calls sont exécutés.
@@ -718,7 +776,7 @@ async def run(args: argparse.Namespace) -> None:
                         try:
                             raw=await sessions["kali"].call_tool("execute_command", arguments={"command": step.command})
                             payload=result_data(raw)
-                            failed=bool(getattr(raw,"isError",False)) or (isinstance(payload,dict) and (payload.get("success") is False or payload.get("return_code") not in (None,0)))
+                            failed=tool_failed(payload, bool(getattr(raw, "isError", False)))
                         except Exception as exc:
                             payload={"error":f"{type(exc).__name__}: {exc}"}
                             failed=True
@@ -819,7 +877,8 @@ async def run(args: argparse.Namespace) -> None:
                             payload, failed = {"error": "Outil inconnu : " + name}, True
                             messages.append({"role": "tool", "tool_name": name, "content": output_text(payload)})
                             render_result(name, payload, failed)
-                            continue
+                            any_failed = True
+                            break
                         server, tool = routes[name]
                         architecture_error = validate_architecture(prompt, server, tool, arguments)
                         if architecture_error:
@@ -838,7 +897,8 @@ async def run(args: argparse.Namespace) -> None:
                                 if "-Pn" not in shlex.split(extra):
                                     arguments["additional_args"] = (extra + " -Pn").strip()
                         show_tool_call(server, tool, arguments, verbose)
-                        auto = safe_automatic(server, tool, arguments, False)
+                        auto = (is_read_only_tool(server, tool)
+                                or safe_automatic(server, tool, arguments, False))
                         approved = auto or await confirm(server, tool, arguments)
                         if approved:
                             print(colored(f"\n[EXÉCUTION] {server}::{tool}" + (" (auto)" if auto else ""), "cyan"))
@@ -853,7 +913,10 @@ async def run(args: argparse.Namespace) -> None:
                             payload, failed = {"error": "Action refusée par l'opérateur."}, True
                         render_result(name, payload, failed)
                         event(Path(args.log), {"server": server, "tool": tool, "arguments": arguments, "approved": approved, "failed": failed})
-                        messages.append({"role": "tool", "tool_name": name, "content": output_text(payload)[:20000]})
+                        model_result = (compact_catalog_for_llm(payload, prompt)
+                                        if server == "metasploit" and tool == "list_payloads" and not failed
+                                        else output_text(payload)[:20000])
+                        messages.append({"role": "tool", "tool_name": name, "content": model_result})
                         if failed:
                             any_failed = True
                             break
