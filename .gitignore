@@ -1,0 +1,28 @@
+# Local runtime / secrets
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+logs/
+data/
+.msf-rpc-secret
+.env
+.env.*
+!.env.example
+*.ccache
+*.kirbi
+*.keytab
+*.pem
+*.p12
+*.pfx
+*.ntds
+*.dmp
+*.pcap
+*.pcapng
+*.har
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

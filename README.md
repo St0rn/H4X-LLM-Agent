@@ -42,23 +42,17 @@
 
 ## H4X in action · H4X en action
 
-**Real startup excerpt / Extrait du démarrage réel**
+<div align="center">
 
-```text
-[OK] PostgreSQL ONLINE
-[OK] Ollama ONLINE — qwen2.5:7b
-[OK] Metasploit RPC AUTHENTICATED
-[OK] Kali MCP API HEALTHY
-[OK] Kali: 12 MCP tools connected
-[OK] Metasploit: 12 MCP tools connected
+<img src="assets/screenshots/h4x-banner.png" alt="Authentic H4X LLM Agent terminal ASCII banner" width="360">
 
-H4X // LLM AGENT READY
-LLM       : qwen2.5:7b
-MCP Tools : 24
-H4X >
-```
+*Authentic H4X banner · Bannière originale H4X*
 
-*Excerpt transcribed from the actual Kali startup screenshot; no fabricated tool execution. / Extrait retranscrit depuis la véritable capture du démarrage Kali ; aucune exécution inventée.*
+<img src="assets/screenshots/h4x-startup.png" alt="Authentic Kali Linux startup showing Ollama, PostgreSQL, Kali MCP, MetasploitMCP and 24 connected MCP tools" width="100%">
+
+*Real Kali Linux startup · Démarrage réel sur Kali Linux*
+
+</div>
 
 ---
 
@@ -289,7 +283,7 @@ Le RAG interroge la documentation technique disponible localement. Il ne remplac
 - Un modèle peut mal interpréter une demande ou proposer des arguments invalides.
 - La recherche documentaire est lexicale, non vectorielle.
 - Un aperçu de commande n'est pas une preuve d'exécution.
-- L'extrait d'initialisation est retranscrit d'une capture réelle, sans garantir le fonctionnement sur chaque machine.
+- Les captures d'écran sont authentiques, sans garantir le fonctionnement sur chaque machine.
 
 </details>
 
@@ -306,6 +300,7 @@ H4X-LLM-Agent/
 |-- requirements.txt         # Dependencies / Dépendances
 |-- docs/                    # Documentation
 |-- tests/                   # Tests
+|-- assets/screenshots/      # Authentic PNG screenshots / Captures réelles
 |-- LICENSE                  # MIT License
 `-- README.md                # EN / FR
 ```
