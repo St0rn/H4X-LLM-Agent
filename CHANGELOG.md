@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.1 — MCP error handling (2026-11-06)
+
+- Recognize application-level MCP errors reported as `status: error`.
+- Prevent the same failed tool call from being executed repeatedly within one LLM turn.
+- Block a Metasploit tool call if its selected module contradicts an explicit x64 architecture request.
+- Add regression tests for these cases.
+- This is a client-side robustness fix; the underlying Metasploit RPC response issue is not yet fixed.
+
+
 ## 0.1.0 — Initial public source package (2026-11-06)
 
 - Ollama conversational CLI with Kali MCP and MetasploitMCP support.
