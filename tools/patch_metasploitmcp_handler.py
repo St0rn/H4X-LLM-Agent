@@ -9,6 +9,7 @@ Usage:
 import argparse
 import ast
 import os
+import re
 import shutil
 import stat
 from datetime import datetime, timezone
@@ -41,7 +42,15 @@ def patch_source(source: str) -> tuple[str, str]:
         return source, "already-patched"
     if source.count(OLD) != 1:
         raise ValueError("Source signature absent or ambiguous: refusing to patch")
-    patched = source.replace(OLD, NEW)
+    # Preserve source indentation across Kali package releases.
+    match = re.search(r"(?m)^([ \\t]*)" + re.escape(OLD) + r"[ \\t]*$", source)
+    if not match:
+        raise ValueError("Could not locate exact source line")
+    indent = match.group(1)
+    lines = NEW.splitlines()
+    rendered = "\n".join(indent + (line[17:] if i else line)
+                         for i, line in enumerate(lines))
+    patched = source[:match.start()] + rendered + source[match.end():]
     ast.parse(patched)
     return patched, "patch-ready"
 
