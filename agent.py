@@ -322,9 +322,41 @@ def output_text(value: Any) -> str:
         return value
     return json.dumps(value, ensure_ascii=False, indent=2, default=str)
 
+def tool_failed(payload: Any, is_error: bool = False) -> bool:
+    """Recognize transport errors and MCP server application-level failures."""
+    if is_error:
+        return True
+    payload = unwrap(payload)
+    if isinstance(payload, dict):
+        status = str(payload.get("status", "")).casefold()
+        return (status in {"error", "failed", "failure"}
+                or payload.get("success") is False
+                or payload.get("return_code") not in (None, 0)
+                or bool(payload.get("error")))
+    return False
+
+
+def validate_architecture(prompt: str, server: str, tool: str,
+                          arguments: dict[str, Any]) -> str | None:
+    """Reject inconsistent explicit CPU-architecture requests."""
+    if server != "metasploit" or tool != "generate_payload":
+        return None
+    name = str(arguments.get("payload_type") or "").lower()
+    wants_x64 = bool(re.search(r"\b(?:x64|64[ -]?(?:bits?|bit)|amd64)\b", prompt, re.I))
+    wants_x86 = bool(re.search(r"\b(?:x86|32[ -]?(?:bits?|bit)|i386)\b", prompt, re.I))
+    is_x64 = bool(re.search(r"(?:^|/)x64(?:/|$)", name))
+    if wants_x64 and not is_x64:
+        return ("La demande précise x64, mais le module sélectionné n'indique pas "
+                "explicitement x64. Vérifie le catalogue avant toute exécution ; "
+                "aucun remplacement automatique effectué.")
+    if wants_x86 and is_x64:
+        return "La demande précise x86, mais le module sélectionné cible x64."
+    return None
+
+
 def render_result(name: str, payload: Any, is_error: bool) -> None:
     payload = unwrap(payload)
-    failed = is_error or (isinstance(payload, dict) and (payload.get("success") is False or payload.get("return_code") not in (None, 0)))
+    failed = tool_failed(payload, is_error)
     heading(f"{name}  {'ERREUR' if failed else 'TERMINÉ'}", "red" if failed else "green")
     if isinstance(payload, dict):
         stdout = payload.get("stdout")
@@ -716,8 +748,7 @@ async def run(args: argparse.Namespace) -> None:
                         try:
                             raw = await sessions[server].call_tool(tool, arguments=planned_nmap)
                             payload = result_data(raw)
-                            failed = bool(getattr(raw, "isError", False)) or (
-                                isinstance(payload, dict) and (payload.get("success") is False or payload.get("return_code") not in (None, 0) or bool(payload.get("error"))))
+                            failed = tool_failed(payload, bool(getattr(raw, "isError", False)))
                         except Exception as exc:
                             payload, failed = {"error": f"{type(exc).__name__}: {exc}"}, True
                     else:
@@ -775,6 +806,7 @@ async def run(args: argparse.Namespace) -> None:
                     if msg.get("content") and not calls:
                         print(colored("\nH4X > ", "blue"))
                         render_answer(msg["content"], format_mode)
+                    any_failed = False
                     for call in calls:
                         fn = call.get("function", {})
                         name = fn.get("name", "")
@@ -789,6 +821,13 @@ async def run(args: argparse.Namespace) -> None:
                             render_result(name, payload, failed)
                             continue
                         server, tool = routes[name]
+                        architecture_error = validate_architecture(prompt, server, tool, arguments)
+                        if architecture_error:
+                            payload = {"status": "error", "message": architecture_error, "error_type": "architecture_mismatch"}
+                            render_result(name, payload, True)
+                            messages.append({"role": "tool", "tool_name": name, "content": output_text(payload)})
+                            any_failed = True
+                            break
                         # Nmap: localhost usually does not need host discovery.
                         if server == "kali" and tool == "nmap_scan":
                             target = str(arguments.get("target", "")).strip()
@@ -806,7 +845,7 @@ async def run(args: argparse.Namespace) -> None:
                             try:
                                 response = await sessions[server].call_tool(tool, arguments=arguments)
                                 payload = result_data(response)
-                                failed = bool(getattr(response, "isError", False)) or (isinstance(payload, dict) and (payload.get("success") is False or payload.get("return_code") not in (None, 0) or bool(payload.get("error"))))
+                                failed = tool_failed(payload, bool(getattr(response, "isError", False)))
                             except Exception as exc:
                                 payload = {"error": f"{type(exc).__name__}: {exc}"}
                                 failed = True
@@ -815,6 +854,13 @@ async def run(args: argparse.Namespace) -> None:
                         render_result(name, payload, failed)
                         event(Path(args.log), {"server": server, "tool": tool, "arguments": arguments, "approved": approved, "failed": failed})
                         messages.append({"role": "tool", "tool_name": name, "content": output_text(payload)[:20000]})
+                        if failed:
+                            any_failed = True
+                            break
+                    if any_failed:
+                        heading("H4X // DIAGNOSTIC", "yellow")
+                        print(colored("Échec de l’outil : aucun nouvel appel automatique. Consulte le résultat.", "yellow"))
+                        break
                 else:
                     print(colored("[INFO] Limite d'itérations atteinte.", "yellow"))
 
