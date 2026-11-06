@@ -39,6 +39,39 @@
 
 ---
 
+## RPC handler compatibility / Compatibilité RPC du handler
+
+| English | Français |
+|:--|:--|
+| Older Kali MetasploitMCP can forward an entire payload object into `pymetasploit3`. Implicit non-scalar defaults such as `AutoLoadExtensions` can then cause an RPC validation error. | Certaines versions de MetasploitMCP transmettent l'objet payload complet à `pymetasploit3`. Les options implicites non scalaires comme `AutoLoadExtensions` peuvent alors provoquer une erreur RPC. |
+| v0.1.3 validates explicit x64 architecture requests for both payload generation and listener setup. | La v0.1.3 vérifie l'architecture x64 des demandes de génération et de lancement de listener. |
+| An **optional, reversible** system patch avoids forwarding default payload options for `exploit/multi/handler` only. | Un correctif système **optionnel et réversible** évite l'envoi des options implicites du payload pour `exploit/multi/handler` uniquement. |
+
+<details>
+<summary><strong>Apply on Kali / Appliquer sur Kali</strong></summary>
+
+```bash
+# Inspect package compatibility / Vérifier la compatibilité
+sudo python3 tools/patch_metasploitmcp_handler.py --check
+
+# Apply once (creates a backup) / Appliquer une fois (crée une sauvegarde)
+sudo python3 tools/patch_metasploitmcp_handler.py --apply
+
+# Restart H4X / Redémarrer H4X
+sudo bash ./hax.sh
+```
+
+For a rollback, use `--restore /path/to/MetasploitMCP.py.bak-...`.
+Pour revenir en arrière, utilise `--restore /chemin/vers/MetasploitMCP.py.bak-...`.
+
+</details>
+
+> [!WARNING]
+> **EN:** Changes to the Kali-packaged system file can be overwritten by package upgrades. This patch is signature-checked, creates a backup and preserves operator confirmation. No live RPC success is claimed.  
+> **FR :** Une mise à jour du paquet Kali peut écraser ce correctif. Le script vérifie la signature du code, sauvegarde l'original et conserve la confirmation utilisateur. Son fonctionnement réel sur Kali reste à valider.
+
+---
+
 ## MCP discovery workflow · Découverte des outils MCP
 
 | **EN — v0.1.2** | **FR — v0.1.2** |
