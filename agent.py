@@ -396,21 +396,36 @@ def tool_failed(payload: Any, is_error: bool = False) -> bool:
 
 def validate_architecture(prompt: str, server: str, tool: str,
                           arguments: dict[str, Any]) -> str | None:
-    """Reject inconsistent explicit CPU-architecture requests."""
-    if server != "metasploit" or tool != "generate_payload":
+    """Reject incompatible architecture selection before sensitive MCP calls.
+
+    Validate the model's selected module name; do not silently substitute a
+    different payload. Catalogue verification remains an independent step.
+    """
+    if server != "metasploit" or tool not in {
+            "generate_payload", "start_listener", "run_exploit"}:
         return None
-    name = str(arguments.get("payload_type") or "").lower()
+
+    # MCP schemas differ: generate_payload/start_listener use payload_type,
+    # while run_exploit uses payload_name or payload_spec.
+    raw = (arguments.get("payload_type") or arguments.get("payload_name")
+           or arguments.get("payload_spec") or "")
+    if isinstance(raw, dict):
+        raw = raw.get("name") or ""
+    name = str(raw).lower().removeprefix("payload/")
+    if not name:
+        return None
+
     wants_x64 = bool(re.search(r"\b(?:x64|64[ -]?(?:bits?|bit)|amd64)\b", prompt, re.I))
     wants_x86 = bool(re.search(r"\b(?:x86|32[ -]?(?:bits?|bit)|i386)\b", prompt, re.I))
     is_x64 = bool(re.search(r"(?:^|/)x64(?:/|$)", name))
     if wants_x64 and not is_x64:
-        return ("La demande précise x64, mais le module sélectionné n'indique pas "
-                "explicitement x64. Vérifie le catalogue avant toute exécution ; "
-                "aucun remplacement automatique effectué.")
+        return ("Architecture demandée : Windows x64. Le module proposé "
+                f"({name}) ne précise pas x64. Sélectionne un module "
+                "explicitement compatible dans le catalogue avant exécution.")
     if wants_x86 and is_x64:
-        return "La demande précise x86, mais le module sélectionné cible x64."
+        return ("Architecture demandée : x86. Le module proposé cible x64. "
+                "Vérifie le catalogue Metasploit avant toute exécution.")
     return None
-
 
 def render_result(name: str, payload: Any, is_error: bool) -> None:
     payload = unwrap(payload)
