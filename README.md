@@ -39,6 +39,22 @@
 
 ---
 
+## MCP discovery workflow · Découverte des outils MCP
+
+| **EN — v0.1.2** | **FR — v0.1.2** |
+|:--|:--|
+| Read-only catalogues (`list_payloads`, `list_jobs`) no longer require confirmation. | Les catalogues en lecture seule (`list_payloads`, `list_jobs`) ne nécessitent plus de confirmation. |
+| H4X offers a smaller, intent-relevant tool list to Ollama. | H4X fournit à Ollama une liste d'outils ciblée selon la demande. |
+| The full MCP result remains visible; a relevance-ranked excerpt goes into the model context. | La sortie MCP complète reste visible ; un extrait pertinent est envoyé au modèle. |
+| **100 results may be a partial catalogue**, not evidence of module absence. | **100 résultats peuvent être une liste partielle**, pas une preuve d'absence. |
+| Explicit x64 requests retain architecture checks; execution still requires approval. | Les contrôles x64 restent actifs et l'exécution nécessite toujours une validation. |
+
+> [!NOTE]
+> **EN:** This release improves the agent's decision flow. It does not fix the upstream Metasploit RPC generation error.  
+> **FR :** Cette version améliore la logique de décision de l'agent. Elle ne corrige pas l'erreur RPC interne de génération Metasploit.
+
+---
+
 ## At a glance · En un coup d'œil
 
 | <div align="center">LOCAL AI</div> | <div align="center">MCP BRIDGE</div> | <div align="center">TECHNICAL RAG</div> |
