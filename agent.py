@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 import httpx
+from h4x_ollama_stream import stream_chat
 from prompt_toolkit import PromptSession
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.history import FileHistory
@@ -843,12 +844,11 @@ async def run(args: argparse.Namespace) -> None:
                 messages.append({"role": "user", "content": prompt + "\n\n<local_context>\n" + retrieved + "\n</local_context>"})
                 for _ in range(args.max_steps):
                     try:
-                        reply = await client.post(args.ollama.rstrip("/") + "/api/chat", json={
+                        result_data = await stream_chat(client, args.ollama.rstrip("/") + "/api/chat", {
                             "model": args.model, "messages": messages, "tools": choose_tools(prompt, tools),
-                            "stream": False, "options": {"temperature": 0.2, "num_ctx": args.num_ctx, "num_predict": 1024}
-                        })
-                        reply.raise_for_status()
-                        msg = reply.json().get("message", {})
+                            "options": {"temperature": 0.2, "num_ctx": args.num_ctx, "num_predict": 2048}
+                        }, console, format_mode)
+                        msg = result_data.get("message", {})
                     except (httpx.HTTPError, ValueError) as exc:
                         print(colored(f"[ERREUR OLLAMA] {exc}", "red"))
                         break
@@ -862,16 +862,15 @@ async def run(args: argparse.Namespace) -> None:
                         else:
                             print(colored("[!] Réponse Ollama vide. Nouvelle tentative sans outils MCP.", "yellow"))
                             if debug:
-                                print(json.dumps({"done_reason": reply.json().get("done_reason"), "eval_count": reply.json().get("eval_count"), "message": msg}, ensure_ascii=False, indent=2))
+                                print(json.dumps({"done_reason": result_data.get("done_reason"), "eval_count": result_data.get("eval_count"), "message": msg}, ensure_ascii=False, indent=2))
                             try:
-                                fallback=await client.post(args.ollama.rstrip("/")+"/api/chat",json={
-                                  "model":args.model,
-                                  "messages": messages[:-1]+[{"role":"user","content":"Ta réponse était vide. Explique ce qui manque et ne prétends pas avoir exécuté d'outil."}],
-                                  "stream":False,
-                                  "options":{"temperature":0.2,"num_ctx":args.num_ctx}
-                                })
-                                fallback.raise_for_status()
-                                reply_text=(fallback.json().get("message") or {}).get("content") or ""
+                                fallback = await stream_chat(client, args.ollama.rstrip("/") + "/api/chat", {
+                                    "model": args.model,
+                                    "messages": messages[:-1] + [{"role": "user", "content":
+                                        "Ta réponse était vide. Explique ce qui manque sans inventer d'exécution."}],
+                                    "options": {"temperature": 0.2, "num_ctx": args.num_ctx, "num_predict": 2048}
+                                }, console, format_mode)
+                                reply_text = (fallback.get("message") or {}).get("content") or ""
                                 render_answer(reply_text.strip() or "[!] Toujours aucune réponse. Essaie /debug ou un autre modèle.", format_mode)
                             except Exception as exc:
                                 print(colored(f"[ERREUR] {exc}", "red"))
